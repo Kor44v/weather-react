@@ -1,35 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect, useSyncExternalStore } from "react";
+import "./App.css";
+import Papa from "papaparse";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const url =
+      "https://visual-crossing-weather.p.rapidapi.com/forecast?aggregateHours=24&location=Rancagua%2CChile&contentType=csv&unitGroup=us&shortColumnNames=0";
+    const options = {
+      method: "GET",
+      headers: {
+        "X-RapidAPI-Key": "8c80ea7253msh336a83e9cf9bddep1d3024jsnc96ad3ded5cc",
+        "X-RapidAPI-Host": "visual-crossing-weather.p.rapidapi.com",
+      },
+    };
+
+    try {
+      fetch(url, options)
+        .then((resp) => resp.text())
+        .then((result) => {
+          Papa.parse(result, {
+            header: true, // Si la primera fila contiene encabezados
+            dynamicTyping: true, // Convierte automáticamente tipos de datos
+            skipEmptyLines: true, // Omite líneas vacías
+            complete: (parsedData) => {
+              setData(parsedData.data);
+            },
+            error: (error) => {
+              console.error(error.message);
+            },
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  const [temp, setTemp] = useState("");
+  const Temperaturas = (data) => {
+    for (let i = 0; i < data.length; i++) {
+      const element = data[i];
+      console.log(element);
+      setTemp(element);
+    }
+  };
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Weather App</h1>
+        {data.length}
+
+        <div>{temp}</div>
+        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
