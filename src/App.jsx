@@ -1,17 +1,19 @@
 import { useState, useEffect, useSyncExternalStore } from "react";
 import "./App.css";
 import Papa from "papaparse";
+import config from "../config";
 
 function App() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    const API_KEY = config.MY_API_TOKEN;
     const url =
       "https://visual-crossing-weather.p.rapidapi.com/forecast?aggregateHours=24&location=Rancagua%2CChile&contentType=csv&unitGroup=us&shortColumnNames=0";
     const options = {
       method: "GET",
       headers: {
-        "X-RapidAPI-Key": "8c80ea7253msh336a83e9cf9bddep1d3024jsnc96ad3ded5cc",
+        "X-RapidAPI-Key": `${API_KEY}`,
         "X-RapidAPI-Host": "visual-crossing-weather.p.rapidapi.com",
       },
     };
