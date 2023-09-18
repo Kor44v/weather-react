@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Card({ name, temp, day }) {
+export default function Card({ name, tempMax, tempMin, day }) {
   return (
     <>
       <div className="my-5">
@@ -18,7 +18,8 @@ export default function Card({ name, temp, day }) {
               {name} - {day}
             </h5>
             <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-              {temp}°C
+              <span className="mx-4">Min: {tempMin}°C</span>
+              <span>Max: {tempMax}°C</span>
             </p>
           </div>
         </a>

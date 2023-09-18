@@ -49,5 +49,7 @@ export default function GetData({ search }) {
         console.log(err);
       });
   }, []);
-  return { data };
+
+  // Retorna el valor del estado `data`
+  return data;
 }
